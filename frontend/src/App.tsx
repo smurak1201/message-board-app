@@ -31,6 +31,8 @@ const App: React.FC = () => {
   // 投稿一覧をAPIから取得
   const fetchPosts = () => {
     setLoading(true);
+    // 本番環境では下記URLを環境変数などで切り替える必要があります
+    // 例: const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
     fetch("http://localhost:3000/api/posts")
       .then((res) => res.json())
       .then((data) => {
@@ -54,6 +56,8 @@ const App: React.FC = () => {
     }
     setSubmitting(true);
     try {
+      // 本番環境では下記URLを環境変数などで切り替える必要があります
+      // 例: const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
       const res = await fetch("http://localhost:3000/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,6 +97,8 @@ const App: React.FC = () => {
     }
     setEditLoading(true);
     try {
+      // 本番環境では下記URLを環境変数などで切り替える必要があります
+      // 例: const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
       const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -117,6 +123,8 @@ const App: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm("本当に削除しますか？")) return;
     try {
+      // 本番環境では下記URLを環境変数などで切り替える必要があります
+      // 例: const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
       const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
         method: "DELETE",
       });
