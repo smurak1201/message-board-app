@@ -14,7 +14,7 @@ import {
 import { Toaster, toast } from "react-hot-toast";
 import { FaRegCommentDots, FaEdit, FaTrash } from "react-icons/fa";
 
-// 投稿データ型
+// 投稿データ型の定義
 interface Post {
   id: number;
   content: string;
@@ -22,15 +22,22 @@ interface Post {
 }
 
 const App: React.FC = () => {
+  // 投稿一覧データ
   const [posts, setPosts] = useState<Post[]>([]);
+  // 投稿一覧のローディング状態
   const [loading, setLoading] = useState(true);
+  // 新規投稿フォームの内容
   const [content, setContent] = useState("");
+  // 投稿送信中かどうか
   const [submitting, setSubmitting] = useState(false);
+  // 編集中の投稿ID（nullなら編集していない）
   const [editId, setEditId] = useState<number | null>(null);
+  // 編集フォームの内容
   const [editContent, setEditContent] = useState("");
+  // 編集送信中かどうか
   const [editLoading, setEditLoading] = useState(false);
 
-  // 投稿一覧取得
+  // 投稿一覧をAPIから取得
   const fetchPosts = () => {
     setLoading(true);
     fetch("http://localhost:3000/api/posts")
@@ -42,11 +49,12 @@ const App: React.FC = () => {
       .catch(() => setLoading(false));
   };
 
+  // 初回マウント時に投稿一覧を取得
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  // 投稿送信
+  // 新規投稿送信処理
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) {
@@ -61,8 +69,8 @@ const App: React.FC = () => {
         body: JSON.stringify({ content }),
       });
       if (res.ok) {
-        setContent("");
-        fetchPosts();
+        setContent(""); // フォームをクリア
+        fetchPosts(); // 一覧を再取得
         toast.success("投稿しました");
       } else {
         toast.error("投稿に失敗しました");
@@ -74,7 +82,7 @@ const App: React.FC = () => {
     }
   };
 
-  // 編集開始
+  // 編集開始（編集フォームを表示）
   const handleEditStart = (post: Post) => {
     setEditId(post.id);
     setEditContent(post.content);
@@ -86,7 +94,7 @@ const App: React.FC = () => {
     setEditContent("");
   };
 
-  // 編集保存
+  // 編集保存処理
   const handleEditSave = async (id: number) => {
     if (!editContent.trim()) {
       toast("内容を入力してください", { icon: "⚠️" });
@@ -114,7 +122,7 @@ const App: React.FC = () => {
     }
   };
 
-  // 削除
+  // 投稿削除処理
   const handleDelete = async (id: number) => {
     if (!window.confirm("本当に削除しますか？")) return;
     try {
@@ -142,12 +150,13 @@ const App: React.FC = () => {
       borderRadius="md"
       bg="white"
     >
+      {/* トースト通知の表示位置 */}
       <Toaster position="top-right" />
       <Heading mb={6} textAlign="center" color="teal.600">
         <Icon as={FaRegCommentDots} boxSize={8} mr={2} />
         掲示板
       </Heading>
-      {/* 投稿フォーム */}
+      {/* 新規投稿フォーム */}
       <Box as="form" onSubmit={handleSubmit} mb={6}>
         <Textarea
           placeholder="投稿内容を入力..."
@@ -166,7 +175,7 @@ const App: React.FC = () => {
           投稿する
         </Button>
       </Box>
-      {/* 投稿一覧 */}
+      {/* 投稿一覧表示 */}
       {loading ? (
         <Spinner size="lg" />
       ) : (
@@ -187,6 +196,7 @@ const App: React.FC = () => {
                 <HStack>
                   <Icon as={FaRegCommentDots} color="teal.400" />
                   {editId === post.id ? (
+                    // 編集フォーム表示中
                     <>
                       <Input
                         value={editContent}
@@ -213,6 +223,7 @@ const App: React.FC = () => {
                       </Button>
                     </>
                   ) : (
+                    // 通常表示
                     <>
                       <Text flex={1}>{post.content}</Text>
                       <Text fontSize="xs" color="gray.400" mr={2}>
