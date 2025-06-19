@@ -12,6 +12,9 @@ interface Post {
   created_at: string;
 }
 
+// APIのベースURL（Viteではimport.meta.envで環境変数を参照）
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 const App: React.FC = () => {
   // 投稿一覧データ
   const [posts, setPosts] = useState<Post[]>([]);
@@ -31,9 +34,7 @@ const App: React.FC = () => {
   // 投稿一覧をAPIから取得
   const fetchPosts = () => {
     setLoading(true);
-    // 本番環境では下記URLを環境変数などで切り替える必要があります
-    // 例: const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
-    fetch("http://localhost:3000/api/posts")
+    fetch(`${API_URL}/api/posts`)
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
@@ -56,9 +57,7 @@ const App: React.FC = () => {
     }
     setSubmitting(true);
     try {
-      // 本番環境では下記URLを環境変数などで切り替える必要があります
-      // 例: const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
-      const res = await fetch("http://localhost:3000/api/posts", {
+      const res = await fetch(`${API_URL}/api/posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
@@ -97,9 +96,7 @@ const App: React.FC = () => {
     }
     setEditLoading(true);
     try {
-      // 本番環境では下記URLを環境変数などで切り替える必要があります
-      // 例: const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
-      const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
+      const res = await fetch(`${API_URL}/api/posts/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: editContent }),
@@ -123,9 +120,7 @@ const App: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm("本当に削除しますか？")) return;
     try {
-      // 本番環境では下記URLを環境変数などで切り替える必要があります
-      // 例: const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
-      const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
+      const res = await fetch(`${API_URL}/api/posts/${id}`, {
         method: "DELETE",
       });
       if (res.ok) {
