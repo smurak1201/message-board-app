@@ -1,5 +1,6 @@
 const express = require('express');
 const { Pool } = require('pg');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,9 @@ const pool = new Pool({
   password: 'message_board_user', // あなたのPostgreSQLパスワード
   port: 5432, // デフォルトポート
 });
+
+// CORSの許可
+app.use(cors());
 
 // JSONボディのパース
 app.use(express.json());
