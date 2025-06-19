@@ -30,12 +30,32 @@ Copyright (c) 2025 skipt
 
 - [PostgreSQL](https://www.postgresql.org/) : オープンソースのリレーショナルデータベース
 
+### 開発支援ツール
+
+- [GitHub Copilot](https://github.com/features/copilot) : AI によるコーディング支援ツール
+
 ## 技術の説明
 
 - **フロントエンド**は React + Chakra UI で構築し、API 通信でバックエンドと連携しています。
 - **バックエンド**は Express で RESTful な API を提供し、データは PostgreSQL に保存されます。
 - **CORS**対応により、フロントエンドとバックエンドを別サーバーで開発できます。
 - **react-hot-toast**でユーザー操作時の通知を実装しています。
+- **GitHub Copilot**を活用して効率的なコーディング・学習を行っています。
+
+## ライセンス表記（主なライブラリ）
+
+- React: MIT License
+- Vite: MIT License
+- Chakra UI: MIT License
+- react-icons: MIT License
+- react-hot-toast: MIT License
+- TypeScript: Apache License 2.0
+- Node.js: MIT License
+- Express: MIT License
+- pg: MIT License
+- cors: MIT License
+- PostgreSQL: PostgreSQL License（MIT に近い独自ライセンス）
+- GitHub Copilot: GitHub Copilot Individual/Business ライセンス
 
 ---
 
