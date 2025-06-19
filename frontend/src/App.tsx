@@ -92,13 +92,13 @@ const App: React.FC = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           mb={2}
-          isDisabled={submitting}
+          disabled={submitting}
         />
         <Button
           colorScheme="teal"
           type="submit"
-          isLoading={submitting}
-          isDisabled={!content.trim() || submitting}
+          loading={submitting}
+          disabled={!content.trim() || submitting}
           w="100%"
         >
           投稿する
