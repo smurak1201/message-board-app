@@ -7,7 +7,10 @@ import {
   HStack,
   Icon,
   Spinner,
+  Textarea,
+  Button,
 } from "@chakra-ui/react";
+import { Toaster, toast } from "react-hot-toast";
 import { FaRegCommentDots } from "react-icons/fa";
 
 // 投稿データ型
@@ -20,8 +23,12 @@ interface Post {
 const App: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
+  // 投稿一覧取得
+  const fetchPosts = () => {
+    setLoading(true);
     fetch("http://localhost:3000/api/posts")
       .then((res) => res.json())
       .then((data) => {
@@ -29,7 +36,39 @@ const App: React.FC = () => {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchPosts();
   }, []);
+
+  // 投稿送信
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!content.trim()) {
+      toast("投稿内容を入力してください", { icon: "⚠️" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch("http://localhost:3000/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
+      if (res.ok) {
+        setContent("");
+        fetchPosts();
+        toast.success("投稿しました");
+      } else {
+        toast.error("投稿に失敗しました");
+      }
+    } catch {
+      toast.error("通信エラー");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <Box
@@ -41,10 +80,31 @@ const App: React.FC = () => {
       borderRadius="md"
       bg="white"
     >
+      <Toaster position="top-right" />
       <Heading mb={6} textAlign="center" color="teal.600">
         <Icon as={FaRegCommentDots} boxSize={8} mr={2} />
         掲示板
       </Heading>
+      {/* 投稿フォーム */}
+      <Box as="form" onSubmit={handleSubmit} mb={6}>
+        <Textarea
+          placeholder="投稿内容を入力..."
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          mb={2}
+          isDisabled={submitting}
+        />
+        <Button
+          colorScheme="teal"
+          type="submit"
+          isLoading={submitting}
+          isDisabled={!content.trim() || submitting}
+          w="100%"
+        >
+          投稿する
+        </Button>
+      </Box>
+      {/* 投稿一覧 */}
       {loading ? (
         <Spinner size="lg" />
       ) : (
