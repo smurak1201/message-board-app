@@ -31,7 +31,7 @@ const App: React.FC = () => {
   // 編集送信中かどうか
   const [editLoading, setEditLoading] = useState(false);
 
-  // 投稿一覧をAPIから取得
+  // 投稿一覧をAPIから取得（失敗時はダミーデータで代用）
   const fetchPosts = () => {
     setLoading(true);
     fetch(`${API_URL}/api/posts`)
@@ -40,7 +40,20 @@ const App: React.FC = () => {
         setPosts(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        // サーバー接続失敗時はメモリ上のダミーデータを使う
+        setPosts([
+          {
+            id: 1,
+            content: "（サーバー未接続）これはローカルのダミー投稿です",
+            created_at: new Date().toISOString(),
+          },
+        ]);
+        setLoading(false);
+        toast("サーバーに接続できません。ローカルデータで表示中", {
+          icon: "⚠️",
+        });
+      });
   };
 
   // 初回マウント時に投稿一覧を取得
@@ -48,7 +61,7 @@ const App: React.FC = () => {
     fetchPosts();
   }, []);
 
-  // 新規投稿送信処理
+  // 新規投稿送信処理（サーバー未接続時はローカルで追加）
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) {
@@ -63,14 +76,24 @@ const App: React.FC = () => {
         body: JSON.stringify({ content }),
       });
       if (res.ok) {
-        setContent(""); // フォームをクリア
-        fetchPosts(); // 一覧を再取得
+        setContent("");
+        fetchPosts();
         toast.success("投稿しました");
       } else {
-        toast.error("投稿に失敗しました");
+        throw new Error();
       }
     } catch {
-      toast.error("通信エラー");
+      // サーバー未接続時はローカルで追加
+      setPosts((prev) => [
+        {
+          id: prev.length ? Math.max(...prev.map((p) => p.id)) + 1 : 1,
+          content,
+          created_at: new Date().toISOString(),
+        },
+        ...prev,
+      ]);
+      setContent("");
+      toast("サーバー未接続のためローカルで追加", { icon: "⚠️" });
     } finally {
       setSubmitting(false);
     }
@@ -88,7 +111,7 @@ const App: React.FC = () => {
     setEditContent("");
   };
 
-  // 編集保存処理
+  // 編集保存処理（サーバー未接続時はローカルで編集）
   const handleEditSave = async (id: number) => {
     if (!editContent.trim()) {
       toast("内容を入力してください", { icon: "⚠️" });
@@ -107,16 +130,21 @@ const App: React.FC = () => {
         setEditContent("");
         fetchPosts();
       } else {
-        toast.error("編集に失敗しました");
+        throw new Error();
       }
     } catch {
-      toast.error("通信エラー");
+      setPosts((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, content: editContent } : p))
+      );
+      setEditId(null);
+      setEditContent("");
+      toast("サーバー未接続のためローカルで編集", { icon: "⚠️" });
     } finally {
       setEditLoading(false);
     }
   };
 
-  // 投稿削除処理
+  // 投稿削除処理（サーバー未接続時はローカルで削除）
   const handleDelete = async (id: number) => {
     if (!window.confirm("本当に削除しますか？")) return;
     try {
@@ -127,10 +155,11 @@ const App: React.FC = () => {
         toast.success("削除しました");
         fetchPosts();
       } else {
-        toast.error("削除に失敗しました");
+        throw new Error();
       }
     } catch {
-      toast.error("通信エラー");
+      setPosts((prev) => prev.filter((p) => p.id !== id));
+      toast("サーバー未接続のためローカルで削除", { icon: "⚠️" });
     }
   };
 
