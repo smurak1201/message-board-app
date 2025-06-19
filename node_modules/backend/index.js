@@ -20,7 +20,7 @@ const pool = new Pool({
 app.use(cors({
   origin: [
     'http://localhost:5173', // 開発用フロントエンド
-    'https://your-app.netlify.app' // Netlifyの本番URLに書き換えてください
+    'https://messageboard-app.netlify.app' // Netlifyの本番URLに書き換えてください
   ],
   credentials: true // 必要に応じて
 }));
