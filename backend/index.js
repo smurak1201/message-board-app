@@ -17,7 +17,13 @@ const pool = new Pool({
 });
 
 // CORS（クロスオリジン）を許可
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173', // 開発用フロントエンド
+    'https://your-app.netlify.app' // Netlifyの本番URLに書き換えてください
+  ],
+  credentials: true // 必要に応じて
+}));
 
 // JSON形式のリクエストボディをパース
 app.use(express.json());
