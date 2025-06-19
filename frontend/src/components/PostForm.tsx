@@ -1,13 +1,15 @@
 import React from "react";
 import { Box, Textarea, Button } from "@chakra-ui/react";
 
+// 投稿フォームのprops型
 interface PostFormProps {
-  content: string;
-  submitting: boolean;
-  onChange: (value: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  content: string; // 入力中の投稿内容
+  submitting: boolean; // 送信中かどうか
+  onChange: (value: string) => void; // 入力内容が変わったときの処理
+  onSubmit: (e: React.FormEvent) => void; // フォーム送信時の処理
 }
 
+// 新規投稿フォームコンポーネント
 const PostForm: React.FC<PostFormProps> = ({
   content,
   submitting,
@@ -16,6 +18,7 @@ const PostForm: React.FC<PostFormProps> = ({
 }) => {
   return (
     <Box as="form" onSubmit={onSubmit} mb={6}>
+      {/* 投稿内容の入力欄 */}
       <Textarea
         placeholder="投稿内容を入力..."
         value={content}
@@ -23,6 +26,7 @@ const PostForm: React.FC<PostFormProps> = ({
         mb={2}
         disabled={submitting}
       />
+      {/* 投稿ボタン */}
       <Button
         colorScheme="teal"
         type="submit"

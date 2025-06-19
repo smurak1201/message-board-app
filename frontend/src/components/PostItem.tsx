@@ -2,24 +2,27 @@ import React from "react";
 import { Box, HStack, Icon, Text, Input, Button } from "@chakra-ui/react";
 import { FaRegCommentDots, FaEdit, FaTrash } from "react-icons/fa";
 
+// 投稿データ型
 interface Post {
   id: number;
   content: string;
   created_at: string;
 }
 
+// 投稿1件分のprops型
 interface PostItemProps {
-  post: Post;
-  editId: number | null;
-  editContent: string;
-  editLoading: boolean;
-  onEditStart: (post: Post) => void;
-  onEditCancel: () => void;
-  onEditSave: (id: number) => void;
-  onEditContentChange: (value: string) => void;
-  onDelete: (id: number) => void;
+  post: Post; // 投稿データ
+  editId: number | null; // 編集中の投稿ID
+  editContent: string; // 編集フォームの内容
+  editLoading: boolean; // 編集送信中かどうか
+  onEditStart: (post: Post) => void; // 編集開始時の処理
+  onEditCancel: () => void; // 編集キャンセル時の処理
+  onEditSave: (id: number) => void; // 編集保存時の処理
+  onEditContentChange: (value: string) => void; // 編集内容変更時の処理
+  onDelete: (id: number) => void; // 削除時の処理
 }
 
+// 投稿1件分を表示・編集・削除できるコンポーネント
 const PostItem: React.FC<PostItemProps> = ({
   post,
   editId,
@@ -36,6 +39,7 @@ const PostItem: React.FC<PostItemProps> = ({
       <HStack>
         <Icon as={FaRegCommentDots} color="teal.400" />
         {editId === post.id ? (
+          // 編集フォーム表示中
           <>
             <Input
               value={editContent}
@@ -58,6 +62,7 @@ const PostItem: React.FC<PostItemProps> = ({
             </Button>
           </>
         ) : (
+          // 通常表示
           <>
             <Text flex={1}>{post.content}</Text>
             <Text fontSize="xs" color="gray.400" mr={2}>
