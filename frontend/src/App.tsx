@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Heading,
-  Flex,
-  Text,
-  HStack,
-  Icon,
-  Spinner,
-  Textarea,
-  Button,
-  Input,
-} from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import { Toaster, toast } from "react-hot-toast";
-import { FaRegCommentDots, FaEdit, FaTrash } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa";
+import PostForm from "./components/PostForm";
+import PostList from "./components/PostList";
 
 // 投稿データ型の定義
 interface Post {
@@ -153,109 +144,29 @@ const App: React.FC = () => {
       {/* トースト通知の表示位置 */}
       <Toaster position="top-right" />
       <Heading mb={6} textAlign="center" color="teal.600">
-        <Icon as={FaRegCommentDots} boxSize={8} mr={2} />
+        <FaRegCommentDots size={32} style={{ marginRight: 8 }} />
         掲示板
       </Heading>
       {/* 新規投稿フォーム */}
-      <Box as="form" onSubmit={handleSubmit} mb={6}>
-        <Textarea
-          placeholder="投稿内容を入力..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          mb={2}
-          disabled={submitting}
-        />
-        <Button
-          colorScheme="teal"
-          type="submit"
-          loading={submitting}
-          disabled={!content.trim() || submitting}
-          w="100%"
-        >
-          投稿する
-        </Button>
-      </Box>
+      <PostForm
+        content={content}
+        submitting={submitting}
+        onChange={setContent}
+        onSubmit={handleSubmit}
+      />
       {/* 投稿一覧表示 */}
-      {loading ? (
-        <Spinner size="lg" />
-      ) : (
-        <Flex direction="column" gap={4}>
-          {posts.length === 0 ? (
-            <Text color="gray.500" textAlign="center">
-              投稿がありません
-            </Text>
-          ) : (
-            posts.map((post) => (
-              <Box
-                key={post.id}
-                p={4}
-                borderWidth={1}
-                borderRadius="md"
-                bg="gray.50"
-              >
-                <HStack>
-                  <Icon as={FaRegCommentDots} color="teal.400" />
-                  {editId === post.id ? (
-                    // 編集フォーム表示中
-                    <>
-                      <Input
-                        value={editContent}
-                        onChange={(e) => setEditContent(e.target.value)}
-                        size="sm"
-                        mr={2}
-                        disabled={editLoading}
-                      />
-                      <Button
-                        colorScheme="teal"
-                        size="sm"
-                        onClick={() => handleEditSave(post.id)}
-                        loading={editLoading}
-                        mr={2}
-                      >
-                        保存
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={handleEditCancel}
-                        disabled={editLoading}
-                      >
-                        キャンセル
-                      </Button>
-                    </>
-                  ) : (
-                    // 通常表示
-                    <>
-                      <Text flex={1}>{post.content}</Text>
-                      <Text fontSize="xs" color="gray.400" mr={2}>
-                        {new Date(post.created_at).toLocaleString()}
-                      </Text>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        colorScheme="teal"
-                        onClick={() => handleEditStart(post)}
-                        mr={1}
-                      >
-                        <FaEdit style={{ marginRight: 4 }} />
-                        編集
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        colorScheme="red"
-                        onClick={() => handleDelete(post.id)}
-                      >
-                        <FaTrash style={{ marginRight: 4 }} />
-                        削除
-                      </Button>
-                    </>
-                  )}
-                </HStack>
-              </Box>
-            ))
-          )}
-        </Flex>
-      )}
+      <PostList
+        posts={posts}
+        loading={loading}
+        editId={editId}
+        editContent={editContent}
+        editLoading={editLoading}
+        onEditStart={handleEditStart}
+        onEditCancel={handleEditCancel}
+        onEditSave={handleEditSave}
+        onEditContentChange={setEditContent}
+        onDelete={handleDelete}
+      />
     </Box>
   );
 };
