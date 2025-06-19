@@ -6,10 +6,10 @@ const PORT = process.env.PORT || 3000;
 
 // PostgreSQL接続設定
 const pool = new Pool({
-  user: 'massage_board_user', // あなたのPostgreSQLユーザー名
+  user: 'message_board_user', // あなたのPostgreSQLユーザー名
   host: 'localhost',
-  database: 'message_board',
-  password: 'password', // あなたのPostgreSQLパスワード
+  database: 'message_board', // あなたのデータベース名
+  password: 'message_board_user', // あなたのPostgreSQLパスワード
   port: 5432, // デフォルトポート
 });
 
@@ -27,7 +27,7 @@ app.get('/api/posts', async (req, res) => {
     const result = await pool.query('SELECT * FROM posts ORDER BY created_at DESC');
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: 'データ取得エラー' });
+    res.status(500).json({ error: 'データ取得エラー!' });
   }
 });
 
