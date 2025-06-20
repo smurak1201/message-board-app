@@ -1,54 +1,32 @@
-# React + TypeScript + Vite
+# 掲示板アプリ 技術構成・ライセンス
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 使用言語・技術
 
-Currently, two official plugins are available:
+- フロントエンド: React (TypeScript, Vite)
+- UI ライブラリ: Chakra UI
+- アイコン: react-icons
+- 通知: react-hot-toast
+- テーマ切替: next-themes
+- バックエンド: PHP (REST API)
+- データベース: MySQL
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 主な npm パッケージとライセンス
 
-## Expanding the ESLint configuration
+| パッケージ名     | 用途              | ライセンス |
+| ---------------- | ----------------- | ---------- |
+| react            | UI 構築           | MIT        |
+| react-dom        | UI 構築           | MIT        |
+| @chakra-ui/react | UI コンポーネント | MIT        |
+| @emotion/react   | スタイルエンジン  | MIT        |
+| react-icons      | アイコン          | MIT        |
+| react-hot-toast  | トースト通知      | MIT        |
+| next-themes      | テーマ切替        | MIT        |
+| typescript       | 型システム        | Apache-2.0 |
+| vite             | ビルドツール      | MIT        |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 各ライブラリの詳細なライセンスは公式リポジトリ等をご確認ください。
+- PHP, MySQL はそれぞれの公式ライセンスに従ってご利用ください。
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+このアプリは学習・個人開発用途を想定しています。商用利用時は各ライブラリのライセンス条項を必ずご確認ください。
