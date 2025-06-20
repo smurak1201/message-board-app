@@ -1,52 +1,45 @@
-# ルート package.json・環境変数・開発/本番切り替えについて
+# 本番環境移行時の修正ガイド
 
-## 本番環境に移行したときに変更するファイル名・内容
-
-- `frontend/.env` ファイルの `VITE_API_URL` を本番用 API エンドポイントに書き換えてください。
-  - 例: `VITE_API_URL=https://your-production-api.example.com`
-- 必要に応じて `backend/.env` も本番用 DB 接続情報などに変更してください。
-
-## 開発環境で 1 回のコマンド実行でサーバが起動する仕組み
-
-- ルートの `package.json` に `npm-run-all` を使った `dev` スクリプトを用意しています。
-- `npm install` をルートで実行後、`npm run dev` でフロントエンド・バックエンド両方の開発サーバが同時に起動します。
-- 各ワークスペース（`frontend`/`backend`）の `dev` スクリプトを個別に実行することも可能です。
+このアプリを本番環境にデプロイする際に必要な修正・確認ポイントをまとめています。
 
 ---
 
-### 参考: ルート package.json のスクリプト
+## 1. API エンドポイントの変更
 
-```json
-"scripts": {
-  "dev": "npm-run-all --parallel dev:*",
-  "dev:frontend": "npm --workspace frontend run dev",
-  "dev:backend": "npm --workspace backend run dev"
-}
-```
+- ルート直下の `.env` ファイルの `VITE_API_URL` を本番用 API の URL に書き換えてください。
+  - 例: `VITE_API_URL=https://your-production-api.example.com/backend_mysql/posts.php`
+- フロントエンドの API 通信はこの環境変数を参照しています。
 
-# ルート package.json のスクリプト・依存関係 コメント解説
+## 2. バックエンド（PHP+MySQL）の設定
 
-- scripts.dev: フロントエンドとバックエンドを同時に開発モードで起動します
-- scripts.dev:frontend: フロントエンドのみ起動
-- scripts.dev:backend: バックエンドのみ起動
-- devDependencies.npm-run-all: 複数の npm スクリプトを並列/直列で実行するためのツール
+- 本番サーバーに `backend_mysql/` ディレクトリ（`posts.php` など）を配置してください。
+- PHP ファイルの DB 接続情報（ホスト名・ユーザー・パスワード・DB 名）は本番用に修正してください。
+  - 例: `backend_mysql/db.php` などで設定
+- MySQL に本番用のデータベース・テーブル（`posts`）を作成してください。
+
+## 3. ビルドとデプロイ
+
+- フロントエンドは `npm run build` で静的ファイル（`dist/`）を生成します。
+- 生成された `dist/` フォルダを本番 Web サーバー（例: Apache/Nginx の公開ディレクトリ）にアップロードしてください。
+- `index.html` から API へのパスが正しいか確認してください。
+
+## 4. その他の注意点
+
+- `.env` や `backend_mysql/db.php` など、機密情報は Git 管理対象外にしてください。
+- CORS 設定や HTTPS 対応など、本番サーバーのセキュリティ設定も確認してください。
+- 不要な開発用ファイル（例: `frontend/`, `backend/`, `*.md` など）は本番サーバーにアップロードしないでください。
 
 ---
 
-## npm-run-all --parallel dev:\* について
+## 参考: 本番移行時のチェックリスト
 
-- `npm-run-all --parallel dev:*` は、`dev:` で始まる複数の npm スクリプト（例: `dev:frontend`, `dev:backend`）を同時に並列実行するコマンドです。
-- これにより、1 回のコマンドでフロントエンドとバックエンドの開発サーバを同時に起動できます。
-- 各サーバのログはターミナル上で同時に確認できます。
+- [ ] `.env` の API エンドポイントを本番用に変更した
+- [ ] PHP バックエンドの DB 接続情報を本番用に変更した
+- [ ] MySQL に本番用 DB・テーブルを作成した
+- [ ] `npm run build` で `dist/` を生成し、本番サーバーに配置した
+- [ ] 不要な開発用ファイルを除外した
+- [ ] セキュリティ・CORS・HTTPS 等の本番設定を確認した
 
-## npm-run-all --parallel dev:\* をどこで実行するか
+---
 
-- このコマンド（または `npm run dev`）は、プロジェクトのルートディレクトリ（`message-board-app` フォルダ直下）で実行してください。
-- 例：
-
-```
-cd message-board-app
-npm run dev
-```
-
-- ルートで実行することで、フロントエンド・バックエンド両方の開発サーバが同時に起動します。
+何か問題が発生した場合は、エラーメッセージやサーバーログを確認し、設定を見直してください。
