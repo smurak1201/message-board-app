@@ -1,62 +1,54 @@
-# message-board-app
+# React + TypeScript + Vite
 
-## 概要
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-このアプリは、React と Node.js/Express、PostgreSQL を使ったシンプルな掲示板アプリです。
+Currently, two official plugins are available:
 
-## 著作権表記
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Copyright (c) 2025 skipt
+## Expanding the ESLint configuration
 
-## 使用している主なライブラリ・フレームワーク
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-### フロントエンド
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-- [React](https://react.dev/) : UI 構築のための JavaScript ライブラリ
-- [Vite](https://vitejs.dev/) : 高速なフロントエンドビルドツール
-- [Chakra UI v3](https://chakra-ui.com/) : モダンな UI コンポーネントライブラリ
-- [react-icons](https://react-icons.github.io/react-icons/) : アイコン集
-- [react-hot-toast](https://react-hot-toast.com/) : トースト通知ライブラリ
-- TypeScript : 型安全な JavaScript 開発
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-### バックエンド
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-- [Node.js](https://nodejs.org/) : JavaScript 実行環境
-- [Express](https://expressjs.com/) : Node.js 用 Web アプリケーションフレームワーク
-- [pg](https://node-postgres.com/) : PostgreSQL 用 Node.js クライアント
-- [cors](https://www.npmjs.com/package/cors) : CORS 対応ミドルウェア
-
-### データベース
-
-- [PostgreSQL](https://www.postgresql.org/) : オープンソースのリレーショナルデータベース
-
-### 開発支援ツール
-
-- [GitHub Copilot](https://github.com/features/copilot) : AI によるコーディング支援ツール
-
-## 技術の説明
-
-- **フロントエンド**は React + Chakra UI で構築し、API 通信でバックエンドと連携しています。
-- **バックエンド**は Express で RESTful な API を提供し、データは PostgreSQL に保存されます。
-- **CORS**対応により、フロントエンドとバックエンドを別サーバーで開発できます。
-- **react-hot-toast**でユーザー操作時の通知を実装しています。
-- **GitHub Copilot**を活用して効率的なコーディング・学習を行っています。
-
-## ライセンス表記（主なライブラリ）
-
-- React: MIT License
-- Vite: MIT License
-- Chakra UI: MIT License
-- react-icons: MIT License
-- react-hot-toast: MIT License
-- TypeScript: Apache License 2.0
-- Node.js: MIT License
-- Express: MIT License
-- pg: MIT License
-- cors: MIT License
-- PostgreSQL: PostgreSQL License（MIT に近い独自ライセンス）
-- GitHub Copilot: GitHub Copilot Individual/Business ライセンス
-
----
-
-このリポジトリのコードは学習・個人利用の範囲で自由にご利用ください。
+export default tseslint.config({
+  plugins: {
+    // Add the react-x and react-dom plugins
+    'react-x': reactX,
+    'react-dom': reactDom,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended typescript rules
+    ...reactX.configs['recommended-typescript'].rules,
+    ...reactDom.configs.recommended.rules,
+  },
+})
+```
