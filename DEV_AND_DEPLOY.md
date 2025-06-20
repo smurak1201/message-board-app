@@ -4,11 +4,12 @@
 
 ---
 
-## 1. API エンドポイントの変更
+## 1. API エンドポイントの変更と.env の使い方
 
 - ルート直下の `.env` ファイルの `VITE_API_URL` を本番用 API の URL に書き換えてください。
   - 例: `VITE_API_URL=https://your-production-api.example.com/backend_mysql/posts.php`
-- フロントエンドの API 通信はこの環境変数を参照しています。
+- フロントエンドの API 通信は `import.meta.env.VITE_API_URL` でこの値を参照しています。
+- `App.tsx` などで API エンドポイントを直接記述せず、必ず環境変数を使うようにしてください。
 
 ## 2. バックエンド（PHP+MySQL）の設定
 
@@ -17,13 +18,13 @@
   - 例: `backend_mysql/db.php` などで設定
 - MySQL に本番用のデータベース・テーブル（`posts`）を作成してください。
 
-## 3. ビルドとデプロイ
+## 3. フロントエンドのビルドとデプロイ
 
-- フロントエンドは `npm run build` で静的ファイル（`dist/`）を生成します。
+- `npm run build` で静的ファイル（`dist/`）を生成します。
 - 生成された `dist/` フォルダを本番 Web サーバー（例: Apache/Nginx の公開ディレクトリ）にアップロードしてください。
 - `index.html` から API へのパスが正しいか確認してください。
 
-## 4. その他の注意点
+## 4. セキュリティ・その他の注意点
 
 - `.env` や `backend_mysql/db.php` など、機密情報は Git 管理対象外にしてください。
 - CORS 設定や HTTPS 対応など、本番サーバーのセキュリティ設定も確認してください。
@@ -34,6 +35,7 @@
 ## 参考: 本番移行時のチェックリスト
 
 - [ ] `.env` の API エンドポイントを本番用に変更した
+- [ ] フロントエンドの API 参照を `import.meta.env.VITE_API_URL` に統一した
 - [ ] PHP バックエンドの DB 接続情報を本番用に変更した
 - [ ] MySQL に本番用 DB・テーブルを作成した
 - [ ] `npm run build` で `dist/` を生成し、本番サーバーに配置した

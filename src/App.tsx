@@ -12,8 +12,8 @@ interface Post {
   created_at: string;
 }
 
-// PHP+MySQLバックエンド用APIエンドポイント
-const API_URL = "http://localhost/backend_mysql/posts.php";
+// .envのVITE_API_URLを参照
+const API_URL = import.meta.env.VITE_API_URL;
 
 const App: React.FC = () => {
   // 投稿一覧データ
