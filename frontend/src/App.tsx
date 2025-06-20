@@ -12,8 +12,8 @@ interface Post {
   created_at: string;
 }
 
-// APIのベースURL（Viteではimport.meta.envで環境変数を参照）
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// PHP+MySQLバックエンド用APIエンドポイント
+const API_URL = "http://localhost/backend_mysql/posts.php";
 
 const App: React.FC = () => {
   // 投稿一覧データ
@@ -31,10 +31,10 @@ const App: React.FC = () => {
   // 編集送信中かどうか
   const [editLoading, setEditLoading] = useState(false);
 
-  // 投稿一覧をAPIから取得（失敗時はダミーデータで代用）
+  // 投稿一覧をAPIから取得
   const fetchPosts = () => {
     setLoading(true);
-    fetch(`${API_URL}/api/posts`)
+    fetch(API_URL)
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
@@ -61,7 +61,7 @@ const App: React.FC = () => {
     fetchPosts();
   }, []);
 
-  // 新規投稿送信処理（サーバー未接続時はローカルで追加）
+  // 新規投稿送信処理
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) {
@@ -70,7 +70,7 @@ const App: React.FC = () => {
     }
     setSubmitting(true);
     try {
-      const res = await fetch(`${API_URL}/api/posts`, {
+      const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
@@ -111,7 +111,7 @@ const App: React.FC = () => {
     setEditContent("");
   };
 
-  // 編集保存処理（サーバー未接続時はローカルで編集）
+  // 編集保存処理
   const handleEditSave = async (id: number) => {
     if (!editContent.trim()) {
       toast("内容を入力してください", { icon: "⚠️" });
@@ -119,7 +119,7 @@ const App: React.FC = () => {
     }
     setEditLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/posts/${id}`, {
+      const res = await fetch(`${API_URL}?id=${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: editContent }),
@@ -144,11 +144,11 @@ const App: React.FC = () => {
     }
   };
 
-  // 投稿削除処理（サーバー未接続時はローカルで削除）
+  // 投稿削除処理
   const handleDelete = async (id: number) => {
     if (!window.confirm("本当に削除しますか？")) return;
     try {
-      const res = await fetch(`${API_URL}/api/posts/${id}`, {
+      const res = await fetch(`${API_URL}?id=${id}`, {
         method: "DELETE",
       });
       if (res.ok) {
