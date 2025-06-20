@@ -47,6 +47,8 @@ const PostItem: React.FC<PostItemProps> = ({
               size="sm"
               mr={2}
               disabled={editLoading}
+              fontSize="16px" // ここで文字サイズを指定
+              style={{ fontSize: "16px" }} // 念のためインラインでも指定
             />
             <Button
               colorScheme="teal"

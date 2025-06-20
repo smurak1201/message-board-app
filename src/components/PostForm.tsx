@@ -25,6 +25,8 @@ const PostForm: React.FC<PostFormProps> = ({
         onChange={(e) => onChange(e.target.value)}
         mb={2}
         disabled={submitting}
+        fontSize="16px" // ここで文字サイズを指定
+        style={{ fontSize: "16px" }} // 念のためインラインでも指定
       />
       {/* 投稿ボタン */}
       <Button
